@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <h1>child</h1>
+  <script type="module">
+    import Messenger from '../src/index.js';
+
+    const child = new Messenger.Child('http://127.0.0.1:5500');
+    child.connect().then(() => {
+      console.log('>>> child.已连接！！！');
+    }).catch(e => {
+      console.log('>>> child.链接失败', e);
+    });
+  </script>
+</body>
+</html>

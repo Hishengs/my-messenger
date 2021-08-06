@@ -1,0 +1,17 @@
+{
+  "name": "my-messenger",
+  "version": "0.0.1",
+  "description": "an enhanced tool for iframe communication",
+  "main": "dist/messenger.common.js",
+  "module": "dist/messenger.es.js",
+  "scripts": {
+    "build": "NODE_ENV=production rollup --config rollup.config.js"
+  },
+  "keywords": [],
+  "author": "hishengs@gmail.com",
+  "license": "MIT",
+  "files": ["dist", "src"],
+  "devDependencies": {
+    "rollup": "^2.56.0"
+  }
+}

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <h1>parent</h1>
+  <iframe id="iframe" src="./child.html" frameborder="1" height="500"></iframe>
+  <script type="module">
+    import Messenger from '../src/index.js';
+
+    const iframe = document.getElementById('iframe');
+    const parent = new Messenger.Parent(iframe);
+    parent.connect().then(() => {
+      console.log('>>> 已连接！！！');
+    }).catch(e => {
+      console.log('>>> 链接失败', e);
+    });
+    window.parentMessenger = parent;
+  </script>
+</body>
+</html>
