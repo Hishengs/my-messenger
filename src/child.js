@@ -48,6 +48,7 @@ export default class MessengerChild extends Base {
   }
 
   onMessage(e) {
+    if (!this.origin) this.origin = e.origin;
     if (this.origin !== e.origin) return;
     const { event = '', data } = e.data || {};
     this.showDebug('onMessage', e.data);
