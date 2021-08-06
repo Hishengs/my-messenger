@@ -1,3 +1,4 @@
+/* my-messenger by Hisheng (hishengs@gmail.com), version: 0.0.2 */
 'use strict';
 
 Object.defineProperty(exports, '__esModule', { value: true });
@@ -195,4 +196,4 @@ const Messenger = {
 };
 
 exports['default'] = Messenger;
-//# sourceMappingURL=messenger.common.js.map
+//# sourceMappingURL=my-messenger.common.js.map

@@ -1,3 +1,4 @@
+/* my-messenger by Hisheng (hishengs@gmail.com), version: 0.0.2 */
 class MessengerBase {
   flag = '';
   debug = false;
@@ -191,4 +192,4 @@ const Messenger = {
 };
 
 export { Messenger as default };
-//# sourceMappingURL=messenger.es.js.map
+//# sourceMappingURL=my-messenger.es.js.map
