@@ -8,14 +8,21 @@
   "scripts": {
     "build": "rm -rf dist && NODE_ENV=production rollup --config rollup.config.js"
   },
-  "keywords": [],
-  "author": "hishengs@gmail.com",
+  "keywords": ["iframe", "postMessage", "post-message", "messenger"],
+  "author": "Hisheng <hishengs@gmail.com>",
   "homepage": "https://github.com/Hishengs/my-messenger",
   "license": "MIT",
   "files": [
     "dist",
     "src"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hishengs/my-messenger.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Hishengs/my-messenger/issues"
+  },
   "devDependencies": {
     "@babel/core": "^7.15.0",
     "@babel/preset-env": "^7.15.0",

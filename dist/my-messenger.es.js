@@ -1,4 +1,4 @@
-/* my-messenger by Hisheng (hishengs@gmail.com), version: 0.0.2 */
+/* my-messenger by Hisheng (hishengs@gmail.com), version: 0.0.3 */
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -287,6 +287,10 @@ var MessengerParent = /*#__PURE__*/function (_Base) {
 
     _classCallCheck(this, MessengerParent);
 
+    if (typeof iframe === 'string') {
+      iframe = document.querySelector(iframe);
+    }
+
     _this = _super.call(this, 'parent', MessengerParent.debug);
 
     _defineProperty(_assertThisInitialized(_this), "shakehandTimes", 0);
@@ -306,51 +310,83 @@ var MessengerParent = /*#__PURE__*/function (_Base) {
     value: function connect() {
       var _this2 = this;
 
-      return this.shakehand().then(function () {
+      return this.checkLoaded().then(function () {
+        return _this2.shakehand();
+      }).then(function () {
         _this2.connected = true;
 
         _this2.showDebug('connected');
+      });
+    } // check if iframe loaded
+
+  }, {
+    key: "checkLoaded",
+    value: function checkLoaded() {
+      var _this3 = this;
+
+      return new Promise(function (resolve, reject) {
+        _this3.showDebug('checkLoaded');
+
+        if (!_this3.iframe) {
+          reject('no iframe found');
+          return;
+        }
+
+        _this3.iframe.addEventListener('load', function () {
+          resolve();
+        });
+
+        try {
+          var iframeDoc = _this3.iframe.contentDocument || _this3.iframe.contentWindow.document;
+
+          if (iframeDoc && iframeDoc.readyState === 'complete') {
+            resolve();
+          }
+        } catch (e) {
+          // throw cross origin access error if loaded, otherwise return document
+          resolve();
+        }
       });
     }
   }, {
     key: "shakehand",
     value: function shakehand() {
-      var _this3 = this;
+      var _this4 = this;
 
       return new Promise(function (resolve, reject) {
         var shake = function shake(ack) {
-          if (_this3.shakehandTimes > MAX_SHAKE_HAND) {
-            clearInterval(_this3.shakehandTimer);
+          if (_this4.shakehandTimes > MAX_SHAKE_HAND) {
+            clearInterval(_this4.shakehandTimer);
 
-            _this3.showError('shakehand failed, max times');
+            _this4.showError('shakehand failed, max times');
 
             reject('shakehand failed, max times');
             return;
           }
 
-          _this3.shakehandTimes++;
+          _this4.shakehandTimes++;
 
-          _this3.showDebug("shakehand: ".concat(_this3.shakehandTimes), ack);
+          _this4.showDebug("shakehand: ".concat(_this4.shakehandTimes), ack);
 
-          _this3.send('shakehand', {
+          _this4.send('shakehand', {
             ack: ack
           });
         }; // start shake
 
 
-        _this3.shakehandTimer = setInterval(shake, SHAKE_HAND_INTERVAL); // on reply
+        _this4.shakehandTimer = setInterval(shake, SHAKE_HAND_INTERVAL); // on reply
 
-        _this3.on('shakehand-reply', function (_ref) {
+        _this4.on('shakehand-reply', function (_ref) {
           var ack = _ref.ack;
 
           // child ack
           if (ack) {
             // stop shake
-            clearInterval(_this3.shakehandTimer); // parent ack
+            clearInterval(_this4.shakehandTimer); // parent ack
 
             shake(true);
 
-            _this3.off('shakehand-reply'); // resolve
+            _this4.off('shakehand-reply'); // resolve
 
 
             resolve();
@@ -412,7 +448,7 @@ var MessengerChild = /*#__PURE__*/function (_Base) {
 
     _defineProperty(_assertThisInitialized(_this), "connected", false);
 
-    _this.origin = origin;
+    _this.origin = origin || document.referrer;
     _this.onMessage = _this.onMessage.bind(_assertThisInitialized(_this));
     window.addEventListener('message', _this.onMessage);
     return _this;

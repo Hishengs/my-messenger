@@ -2,6 +2,11 @@
 
 `my-messenger` is an enhanced tool for iframe communication, which is light, simple and reliable to use
 
+[![npm][npm-image]][npm-url]
+
+[npm-image]: https://badge.fury.io/js/my-messenger.svg
+[npm-url]: https://www.npmjs.com/package/my-messenger
+
 ## Installing
 
 ```js
@@ -14,6 +19,8 @@ parent.html
 
 ```js
 import Messenger from 'my-messenger';
+
+// Messenger.Parent.debug = true; // open if you want debug info
 
 const iframe = document.getElementById('iframe');
 const parent = new Messenger.Parent(iframe);
@@ -32,6 +39,8 @@ child.html
 ```js
 import Messenger from 'my-messenger';
 
+// Messenger.Child.debug = true; // open if you want debug info
+
 const child = new Messenger.Child();
 
 child.connect()
@@ -48,9 +57,9 @@ child.connect()
 
 ## API
 
-### new Parent(el: Element)
+### new Parent(el: Element | Selector)
 
-el: Element of Child iframe
+el: Element of Child iframe or a iframe Selector
 
 ### Parent.connect()
 
@@ -66,7 +75,7 @@ listen to event from Child
 
 ### Parent.close()
 
-clear and close
+clean and close
 
 ---
 
@@ -84,4 +93,4 @@ listen to event from Parent
 
 ### Child.close()
 
-clear and close
+clean and close

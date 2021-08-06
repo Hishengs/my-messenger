@@ -7,7 +7,7 @@ export default class MessengerChild extends Base {
 
   constructor (origin) {
     super('child', MessengerChild.debug);
-    this.origin = origin;
+    this.origin = origin || document.referrer;
     this.onMessage = this.onMessage.bind(this);
     window.addEventListener('message', this.onMessage);
   }

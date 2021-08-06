@@ -1,4 +1,4 @@
-/* my-messenger by Hisheng (hishengs@gmail.com), version: 0.0.2 */
+/* my-messenger by Hisheng (hishengs@gmail.com), version: 0.0.3 */
 'use strict';
 
 Object.defineProperty(exports, '__esModule', { value: true });
@@ -61,6 +61,9 @@ class MessengerParent extends MessengerBase {
   connected = false;
 
   constructor (iframe) {
+    if (typeof iframe === 'string') {
+      iframe = document.querySelector(iframe);
+    }
     super('parent', MessengerParent.debug);
     this.iframe = iframe;
     this.onMessage = this.onMessage.bind(this);
@@ -68,9 +71,34 @@ class MessengerParent extends MessengerBase {
   }
 
   connect () {
-    return this.shakehand().then(() => {
-      this.connected = true;
-      this.showDebug('connected');
+    return this.checkLoaded()
+      .then(() => this.shakehand())
+      .then(() => {
+        this.connected = true;
+        this.showDebug('connected');
+      });
+  }
+
+  // check if iframe loaded
+  checkLoaded () {
+    return new Promise((resolve, reject) => {
+      this.showDebug('checkLoaded');
+      if (!this.iframe) {
+        reject('no iframe found');
+        return;
+      }
+      this.iframe.addEventListener('load', () => {
+        resolve();
+      });
+      try {
+        const iframeDoc = this.iframe.contentDocument || this.iframe.contentWindow.document;
+        if (iframeDoc && iframeDoc.readyState === 'complete') {
+          resolve();
+        }
+      } catch (e) {
+        // throw cross origin access error if loaded, otherwise return document
+        resolve();
+      }
     });
   }
 
@@ -136,7 +164,7 @@ class MessengerChild extends MessengerBase {
 
   constructor (origin) {
     super('child', MessengerChild.debug);
-    this.origin = origin;
+    this.origin = origin || document.referrer;
     this.onMessage = this.onMessage.bind(this);
     window.addEventListener('message', this.onMessage);
   }

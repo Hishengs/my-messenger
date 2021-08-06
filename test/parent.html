@@ -13,6 +13,7 @@
     import Messenger from '../src/index.js';
 
     const iframe = document.getElementById('iframe');
+    iframe.addEventListener('load', () => console.log('>>> iframe loaded'));
     const parent = new Messenger.Parent(iframe);
     parent.connect().then(() => {
       console.log('>>> 已连接！！！');

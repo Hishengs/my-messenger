@@ -10,6 +10,9 @@ export default class MessengerParent extends Base {
   connected = false;
 
   constructor (iframe) {
+    if (typeof iframe === 'string') {
+      iframe = document.querySelector(iframe);
+    }
     super('parent', MessengerParent.debug);
     this.iframe = iframe;
     this.onMessage = this.onMessage.bind(this);
@@ -17,9 +20,34 @@ export default class MessengerParent extends Base {
   }
 
   connect () {
-    return this.shakehand().then(() => {
-      this.connected = true;
-      this.showDebug('connected');
+    return this.checkLoaded()
+      .then(() => this.shakehand())
+      .then(() => {
+        this.connected = true;
+        this.showDebug('connected');
+      });
+  }
+
+  // check if iframe loaded
+  checkLoaded () {
+    return new Promise((resolve, reject) => {
+      this.showDebug('checkLoaded');
+      if (!this.iframe) {
+        reject('no iframe found');
+        return;
+      }
+      this.iframe.addEventListener('load', () => {
+        resolve();
+      });
+      try {
+        const iframeDoc = this.iframe.contentDocument || this.iframe.contentWindow.document;
+        if (iframeDoc && iframeDoc.readyState === 'complete') {
+          resolve();
+        }
+      } catch (e) {
+        // throw cross origin access error if loaded, otherwise return document
+        resolve();
+      }
     });
   }
 
