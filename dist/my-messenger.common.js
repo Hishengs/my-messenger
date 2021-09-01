@@ -1,4 +1,4 @@
-/* my-messenger by Hisheng (hishengs@gmail.com), version: 0.0.3 */
+/* my-messenger by Hisheng (hishengs@gmail.com), version: 0.0.4 */
 'use strict';
 
 Object.defineProperty(exports, '__esModule', { value: true });
@@ -206,7 +206,7 @@ class MessengerChild extends MessengerBase {
 
   onMessage(e) {
     if (!this.origin) this.origin = e.origin;
-    if (this.origin !== e.origin) return;
+    if (!this.origin.includes(e.origin)) return;
     const { event = '', data } = e.data || {};
     this.showDebug('onMessage', e.data);
     this.invoke(event, data);
