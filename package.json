@@ -1,6 +1,6 @@
 {
   "name": "my-messenger",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "an enhanced tool for iframe communication",
   "main": "dist/my-messenger.common.js",
   "module": "dist/my-messenger.es.js",

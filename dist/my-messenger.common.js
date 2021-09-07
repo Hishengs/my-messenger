@@ -1,4 +1,4 @@
-/* my-messenger by Hisheng (hishengs@gmail.com), version: 0.0.4 */
+/* my-messenger by Hisheng (hishengs@gmail.com), version: 0.0.5 */
 'use strict';
 
 Object.defineProperty(exports, '__esModule', { value: true });
@@ -31,7 +31,7 @@ class MessengerBase {
   }
 
   offAll () {
-    Object.keys(this.events).forEach(this.off);
+    Object.keys(this.events).forEach(e => this.off(e));
   }
 
   invoke (event, ...args) {

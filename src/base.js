@@ -26,7 +26,7 @@ export default class MessengerBase {
   }
 
   offAll () {
-    Object.keys(this.events).forEach(this.off);
+    Object.keys(this.events).forEach(e => this.off(e));
   }
 
   invoke (event, ...args) {

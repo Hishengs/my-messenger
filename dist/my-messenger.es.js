@@ -1,4 +1,4 @@
-/* my-messenger by Hisheng (hishengs@gmail.com), version: 0.0.4 */
+/* my-messenger by Hisheng (hishengs@gmail.com), version: 0.0.5 */
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -228,7 +228,11 @@ var MessengerBase = /*#__PURE__*/function () {
   }, {
     key: "offAll",
     value: function offAll() {
-      Object.keys(this.events).forEach(this.off);
+      var _this = this;
+
+      Object.keys(this.events).forEach(function (e) {
+        return _this.off(e);
+      });
     }
   }, {
     key: "invoke",
