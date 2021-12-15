@@ -1,4 +1,4 @@
-/* my-messenger by Hisheng (hishengs@gmail.com), version: 0.0.5 */
+/* my-messenger by Hisheng (hishengs@gmail.com), version: 0.0.6 */
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -278,9 +278,6 @@ var MessengerBase = /*#__PURE__*/function () {
   return MessengerBase;
 }();
 
-var MAX_SHAKE_HAND = 50;
-var SHAKE_HAND_INTERVAL = 100;
-
 var MessengerParent = /*#__PURE__*/function (_Base) {
   _inherits(MessengerParent, _Base);
 
@@ -288,6 +285,8 @@ var MessengerParent = /*#__PURE__*/function (_Base) {
 
   function MessengerParent(iframe) {
     var _this;
+
+    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
     _classCallCheck(this, MessengerParent);
 
@@ -303,7 +302,17 @@ var MessengerParent = /*#__PURE__*/function (_Base) {
 
     _defineProperty(_assertThisInitialized(_this), "connected", false);
 
+    _defineProperty(_assertThisInitialized(_this), "timeout", 5000);
+
+    _defineProperty(_assertThisInitialized(_this), "interval", 100);
+
+    _defineProperty(_assertThisInitialized(_this), "maxShakeTimes", 50);
+
     _this.iframe = iframe;
+    _this.timeout = options.timeout || _this.timeout;
+    _this.interval = options.interval || _this.interval;
+    _this.maxShakeTimes = Math.floor(_this.timeout / _this.interval);
+    _this.targetOrigin = options.targetOrigin || iframe.src;
     _this.onMessage = _this.onMessage.bind(_assertThisInitialized(_this));
     window.addEventListener("message", _this.onMessage);
     return _this;
@@ -359,7 +368,7 @@ var MessengerParent = /*#__PURE__*/function (_Base) {
 
       return new Promise(function (resolve, reject) {
         var shake = function shake(ack) {
-          if (_this4.shakehandTimes > MAX_SHAKE_HAND) {
+          if (_this4.shakehandTimes > _this4.maxShakeTimes) {
             clearInterval(_this4.shakehandTimer);
 
             _this4.showError('shakehand failed, max times');
@@ -378,7 +387,7 @@ var MessengerParent = /*#__PURE__*/function (_Base) {
         }; // start shake
 
 
-        _this4.shakehandTimer = setInterval(shake, SHAKE_HAND_INTERVAL); // on reply
+        _this4.shakehandTimer = setInterval(shake, _this4.interval); // on reply
 
         _this4.on('shakehand-reply', function (_ref) {
           var ack = _ref.ack;
@@ -406,7 +415,7 @@ var MessengerParent = /*#__PURE__*/function (_Base) {
           this.iframe.contentWindow.postMessage({
             event: event,
             data: data
-          }, this.iframe.src);
+          }, this.targetOrigin);
         } catch (e) {
           this.showError(e);
         }
@@ -415,7 +424,7 @@ var MessengerParent = /*#__PURE__*/function (_Base) {
   }, {
     key: "onMessage",
     value: function onMessage(e) {
-      if (!this.iframe.src.includes(e.origin)) return;
+      if (this.targetOrigin !== '*' && !this.targetOrigin.includes(e.origin)) return;
       var _e$data = e.data,
           event = _e$data.event,
           data = _e$data.data;

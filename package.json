@@ -1,6 +1,6 @@
 {
   "name": "my-messenger",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "an enhanced tool for iframe communication",
   "main": "dist/my-messenger.common.js",
   "module": "dist/my-messenger.es.js",
@@ -8,7 +8,12 @@
   "scripts": {
     "build": "rm -rf dist && NODE_ENV=production rollup --config rollup.config.js"
   },
-  "keywords": ["iframe", "postMessage", "post-message", "messenger"],
+  "keywords": [
+    "iframe",
+    "postMessage",
+    "post-message",
+    "messenger"
+  ],
   "author": "Hisheng <hishengs@gmail.com>",
   "homepage": "https://github.com/Hishengs/my-messenger",
   "license": "MIT",

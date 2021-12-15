@@ -1,20 +1,24 @@
 import Base from './base.js';
 
-const MAX_SHAKE_HAND = 50;
-const SHAKE_HAND_INTERVAL = 100;
-
 export default class MessengerParent extends Base {
   static debug = false;
   shakehandTimes = 0;
   shakehandTimer = null;
   connected = false;
+  timeout = 5000;
+  interval = 100;
+  maxShakeTimes = 50;
 
-  constructor (iframe) {
+  constructor (iframe, options = {}) {
     if (typeof iframe === 'string') {
       iframe = document.querySelector(iframe);
     }
     super('parent', MessengerParent.debug);
     this.iframe = iframe;
+    this.timeout = options.timeout || this.timeout;
+    this.interval = options.interval || this.interval;
+    this.maxShakeTimes = Math.floor(this.timeout / this.interval);
+    this.targetOrigin = options.targetOrigin || iframe.src;
     this.onMessage = this.onMessage.bind(this);
     window.addEventListener("message", this.onMessage);
   }
@@ -54,7 +58,7 @@ export default class MessengerParent extends Base {
   shakehand () {
     return new Promise((resolve, reject) => {
       const shake = (ack) => {
-        if (this.shakehandTimes > MAX_SHAKE_HAND) {
+        if (this.shakehandTimes > this.maxShakeTimes) {
           clearInterval(this.shakehandTimer);
           this.showError('shakehand failed, max times');
           reject('shakehand failed, max times');
@@ -65,7 +69,7 @@ export default class MessengerParent extends Base {
         this.send('shakehand', { ack });
       };
       // start shake
-      this.shakehandTimer = setInterval(shake, SHAKE_HAND_INTERVAL);
+      this.shakehandTimer = setInterval(shake, this.interval);
       // on reply
       this.on('shakehand-reply', ({ ack }) => {
         // child ack
@@ -85,7 +89,7 @@ export default class MessengerParent extends Base {
   send (event, data) {
     if (this.iframe && this.iframe.contentWindow) {
       try {
-        this.iframe.contentWindow.postMessage({ event, data }, this.iframe.src);
+        this.iframe.contentWindow.postMessage({ event, data }, this.targetOrigin);
       } catch (e) {
         this.showError(e);
       }
@@ -93,7 +97,7 @@ export default class MessengerParent extends Base {
   }
 
   onMessage (e) {
-    if (!this.iframe.src.includes(e.origin)) return;
+    if (this.targetOrigin !== '*' && !this.targetOrigin.includes(e.origin)) return;
     const { event, data } = e.data;
     this.showDebug('onMessage', e.data);
     this.invoke(event, data);
