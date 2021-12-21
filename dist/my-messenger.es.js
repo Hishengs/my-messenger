@@ -1,4 +1,4 @@
-/* my-messenger by Hisheng (hishengs@gmail.com), version: 0.0.6 */
+/* my-messenger by Hisheng (hishengs@gmail.com), version: 0.0.7 */
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -201,7 +201,9 @@ var MessengerBase = /*#__PURE__*/function () {
 
     _defineProperty(this, "events", {});
 
-    this.flag = flag;
+    _defineProperty(this, "uid", +new Date());
+
+    this.flag = flag + '_' + this.uid;
     this.debug = debug;
     this.debugPrefix = "[messenager.".concat(this.flag, "]").padEnd(20, '>');
   }
@@ -368,7 +370,7 @@ var MessengerParent = /*#__PURE__*/function (_Base) {
 
       return new Promise(function (resolve, reject) {
         var shake = function shake(ack) {
-          if (_this4.shakehandTimes > _this4.maxShakeTimes) {
+          if (_this4.shakehandTimes >= _this4.maxShakeTimes) {
             clearInterval(_this4.shakehandTimer);
 
             _this4.showError('shakehand failed, max times');
@@ -387,6 +389,7 @@ var MessengerParent = /*#__PURE__*/function (_Base) {
         }; // start shake
 
 
+        shake();
         _this4.shakehandTimer = setInterval(shake, _this4.interval); // on reply
 
         _this4.on('shakehand-reply', function (_ref) {
@@ -424,12 +427,12 @@ var MessengerParent = /*#__PURE__*/function (_Base) {
   }, {
     key: "onMessage",
     value: function onMessage(e) {
-      if (this.targetOrigin !== '*' && !this.targetOrigin.includes(e.origin)) return;
+      if (!this.iframe || this.iframe.contentWindow !== e.source) return;
       var _e$data = e.data,
           event = _e$data.event,
           data = _e$data.data;
-      this.showDebug('onMessage', e.data);
-      this.invoke(event, data);
+      this.showDebug('onMessage', e);
+      this.invoke(event, data, e);
     }
   }, {
     key: "close",
@@ -533,7 +536,7 @@ var MessengerChild = /*#__PURE__*/function (_Base) {
           data = _ref2.data;
 
       this.showDebug('onMessage', e.data);
-      this.invoke(event, data);
+      this.invoke(event, data, e);
     }
   }, {
     key: "close",

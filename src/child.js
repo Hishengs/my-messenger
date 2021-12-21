@@ -52,7 +52,7 @@ export default class MessengerChild extends Base {
     if (!this.origin.includes(e.origin)) return;
     const { event = '', data } = e.data || {};
     this.showDebug('onMessage', e.data);
-    this.invoke(event, data);
+    this.invoke(event, data, e);
   }
 
   close () {

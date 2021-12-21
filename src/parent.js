@@ -58,7 +58,7 @@ export default class MessengerParent extends Base {
   shakehand () {
     return new Promise((resolve, reject) => {
       const shake = (ack) => {
-        if (this.shakehandTimes > this.maxShakeTimes) {
+        if (this.shakehandTimes >= this.maxShakeTimes) {
           clearInterval(this.shakehandTimer);
           this.showError('shakehand failed, max times');
           reject('shakehand failed, max times');
@@ -69,6 +69,7 @@ export default class MessengerParent extends Base {
         this.send('shakehand', { ack });
       };
       // start shake
+      shake();
       this.shakehandTimer = setInterval(shake, this.interval);
       // on reply
       this.on('shakehand-reply', ({ ack }) => {
@@ -97,10 +98,10 @@ export default class MessengerParent extends Base {
   }
 
   onMessage (e) {
-    if (this.targetOrigin !== '*' && !this.targetOrigin.includes(e.origin)) return;
+    if (!this.iframe || (this.iframe.contentWindow !== e.source)) return;
     const { event, data } = e.data;
-    this.showDebug('onMessage', e.data);
-    this.invoke(event, data);
+    this.showDebug('onMessage', e);
+    this.invoke(event, data, e);
   }
 
   close () {

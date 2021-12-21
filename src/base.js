@@ -3,9 +3,10 @@ export default class MessengerBase {
   debug = false;
   debugPrefix = '';
   events = {};
+  uid = +new Date();
 
   constructor (flag, debug) {
-    this.flag = flag;
+    this.flag = flag + '_' + this.uid;
     this.debug = debug;
     this.debugPrefix = `[messenager.${this.flag}]`.padEnd(20, '>');
   }
