@@ -1,4 +1,4 @@
-/* my-messenger by Hisheng (hishengs@gmail.com), version: 0.0.7 */
+/* my-messenger by Hisheng (hishengs@gmail.com), version: 0.0.8 */
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -464,7 +464,7 @@ var MessengerChild = /*#__PURE__*/function (_Base) {
 
     _defineProperty(_assertThisInitialized(_this), "connected", false);
 
-    _this.origin = origin || document.referrer;
+    _this.origin = origin || document.referrer || '*';
     _this.onMessage = _this.onMessage.bind(_assertThisInitialized(_this));
     window.addEventListener('message', _this.onMessage);
     return _this;
@@ -527,9 +527,6 @@ var MessengerChild = /*#__PURE__*/function (_Base) {
   }, {
     key: "onMessage",
     value: function onMessage(e) {
-      if (!this.origin) this.origin = e.origin;
-      if (!this.origin.includes(e.origin)) return;
-
       var _ref2 = e.data || {},
           _ref2$event = _ref2.event,
           event = _ref2$event === void 0 ? '' : _ref2$event,

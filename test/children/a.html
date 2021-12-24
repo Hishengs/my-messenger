@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.5, maximum-scale=2.0, user-scalable=no">
+  <title>Document</title>
+</head>
+<body>
+  <h1>Child A</h1>
+  <button onclick="sendMsg()">send to parent</button>
+  <script>
+    window.addEventListener('message', e => {
+      console.log('>>> child.a.message', e);
+    })
+    function sendMsg () {
+      window.parent.postMessage({ event: 'hi', data: 'man' }, '*');
+    }
+  </script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-/* my-messenger by Hisheng (hishengs@gmail.com), version: 0.0.7 */
+/* my-messenger by Hisheng (hishengs@gmail.com), version: 0.0.8 */
 'use strict';
 
 Object.defineProperty(exports, '__esModule', { value: true });
@@ -170,7 +170,7 @@ class MessengerChild extends MessengerBase {
 
   constructor (origin) {
     super('child', MessengerChild.debug);
-    this.origin = origin || document.referrer;
+    this.origin = origin || document.referrer || '*';
     this.onMessage = this.onMessage.bind(this);
     window.addEventListener('message', this.onMessage);
   }
@@ -211,8 +211,6 @@ class MessengerChild extends MessengerBase {
   }
 
   onMessage(e) {
-    if (!this.origin) this.origin = e.origin;
-    if (!this.origin.includes(e.origin)) return;
     const { event = '', data } = e.data || {};
     this.showDebug('onMessage', e.data);
     this.invoke(event, data, e);

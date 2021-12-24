@@ -3,24 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=0.5">
   <title>Document</title>
 </head>
 <body>
-  <h1>parent</h1>
-  <iframe id="iframe" src="./child.html" frameborder="1" height="500"></iframe>
-  <script type="module">
-    import Messenger from '../src/index.js';
-
-    const iframe = document.getElementById('iframe');
-    iframe.addEventListener('load', () => console.log('>>> iframe loaded'));
-    const parent = new Messenger.Parent(iframe);
-    parent.connect().then(() => {
-      console.log('>>> 已连接！！！');
-    }).catch(e => {
-      console.log('>>> 链接失败', e);
-    });
-    window.parentMessenger = parent;
+  <h1>Parent</h1>
+  <button onclick="sendMsg('a')">send to a</button>
+  <button onclick="sendMsg('b')">send to b</button>
+  <iframe id="a" src="./children/a.html" frameborder="0"></iframe>
+  <iframe id="b" src="./children/b.html" frameborder="0"></iframe>
+  <script>
+    // const pageA = document.getElementById('a')
+    // const pageB = document.getElementById('b')
+    function sendMsg (id) {
+      const page = document.getElementById(id)
+      page.contentWindow.postMessage({ event: 'hi', data: 'man' }, /* page.src */'*');
+    }
+    window.addEventListener('message', e => {
+      console.log('>>> parent.message', e.source === document.getElementById('a').contentWindow);
+    })
   </script>
 </body>
 </html>

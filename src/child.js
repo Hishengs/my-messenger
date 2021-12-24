@@ -7,7 +7,7 @@ export default class MessengerChild extends Base {
 
   constructor (origin) {
     super('child', MessengerChild.debug);
-    this.origin = origin || document.referrer;
+    this.origin = origin || document.referrer || '*';
     this.onMessage = this.onMessage.bind(this);
     window.addEventListener('message', this.onMessage);
   }
@@ -48,8 +48,6 @@ export default class MessengerChild extends Base {
   }
 
   onMessage(e) {
-    if (!this.origin) this.origin = e.origin;
-    if (!this.origin.includes(e.origin)) return;
     const { event = '', data } = e.data || {};
     this.showDebug('onMessage', e.data);
     this.invoke(event, data, e);
