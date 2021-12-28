@@ -1,7 +1,17 @@
 const babel = require('@rollup/plugin-babel').default;
 const { terser } = require('rollup-plugin-terser');
+const commonjs = require("@rollup/plugin-commonjs");
+const { nodeResolve } = require("@rollup/plugin-node-resolve");
 const pkg = require('./package.json');
 const banner = `/* ${pkg.name} by Hisheng (hishengs@gmail.com), version: ${pkg.version} */`;
+
+const plugins = () => [
+  nodeResolve({
+    browser: true,
+  }),
+  commonjs(),
+  babel({ babelHelpers: "bundled", exclude: ["node_modules/**"] }),
+];
 
 module.exports = [
   {
@@ -24,7 +34,7 @@ module.exports = [
       sourcemap: true
     },
     plugins: [
-      babel()
+      ...plugins()
     ]
   },
   {
@@ -38,6 +48,7 @@ module.exports = [
       sourcemap: true
     },
     plugins: [
+      ...plugins(),
       terser()
     ],
   }

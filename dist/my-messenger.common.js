@@ -1,4 +1,4 @@
-/* my-messenger by Hisheng (hishengs@gmail.com), version: 0.0.8 */
+/* my-messenger by Hisheng (hishengs@gmail.com), version: 0.0.9 */
 'use strict';
 
 Object.defineProperty(exports, '__esModule', { value: true });
@@ -13,7 +13,7 @@ class MessengerBase {
   constructor (flag, debug) {
     this.flag = flag + '_' + this.uid;
     this.debug = debug;
-    this.debugPrefix = `[messenager.${this.flag}]`.padEnd(20, '>');
+    this.debugPrefix = '[messenager.' + this.flag + '] >>>';
   }
 
   on(event, callback) {
@@ -37,9 +37,9 @@ class MessengerBase {
 
   invoke (event, ...args) {
     if (event && this.events[event]) {
-      for (const cb of this.events[event]) {
+      this.events[event].forEach(cb => {
         cb.call(this, ...args);
-      }
+      });
     }
   }
 

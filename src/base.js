@@ -8,7 +8,7 @@ export default class MessengerBase {
   constructor (flag, debug) {
     this.flag = flag + '_' + this.uid;
     this.debug = debug;
-    this.debugPrefix = `[messenager.${this.flag}]`.padEnd(20, '>');
+    this.debugPrefix = '[messenager.' + this.flag + '] >>>';
   }
 
   on(event, callback) {
@@ -32,9 +32,9 @@ export default class MessengerBase {
 
   invoke (event, ...args) {
     if (event && this.events[event]) {
-      for (const cb of this.events[event]) {
+      this.events[event].forEach(cb => {
         cb.call(this, ...args);
-      }
+      });
     }
   }
 
